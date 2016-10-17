@@ -24,13 +24,19 @@ gulp.task('images', function() {
         .pipe(gulp.dest('./www/img'));
 });
 
-gulp.task('build', ['images', 'pug', 'sass']);
+gulp.task('javascript', function() {
+    gulp.src('./src/javascript/*.js')
+        .pipe(gulp.dest('./www/js'));
+});
+
+gulp.task('build', ['images', 'pug', 'sass', 'javascript']);
 
 gulp.task('serve', ['sass'], function() {
     browserSync.init({
         server: "./www"
     });
     gulp.watch("src/sass/*.sass", ['sass']);
+    gulp.watch("src/javascript/*.js", ['javascript']);
     gulp.watch("src/template/**/*.{pug,js,md}", ['pug']);
     gulp.watch("www/*.html").on('change', browserSync.reload);
 });
