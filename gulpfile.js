@@ -1,60 +1,63 @@
-var gulp = require('gulp');
-var pug = require('gulp-pug');
-var sass = require('gulp-sass');
-var watch = require('gulp-watch');
-var browserSync = require('browser-sync').create();
-var gutil = require('gulp-util');
-var ftp = require('vinyl-ftp');
+var gulp = require('gulp'),
+    pug = require('gulp-pug'),
+    sass = require('gulp-sass'),
+    gutil = require('gulp-util'),
+    ftp = require('vinyl-ftp'),
+    watch = require('gulp-watch'),
+    browserSync = require('browser-sync');
 
+// COMPILES .PUG FILES TO HTML
 gulp.task('pug', function() {
     return gulp.src('./src/template/*.pug')
         .pipe(pug())
-        .pipe(gulp.dest('./www/'))
+        .pipe(gulp.dest('./public_html/'))
 });
 
+// COMPILES .SASS TO .CSS
 gulp.task('sass', function() {
     return gulp.src('./src/sass/*.sass')
         .pipe(sass())
-        .pipe(gulp.dest('./www/css'))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest('./public_html/css'));
 });
 
+// COPIES IMAGES FROM SRC TO DEST
 gulp.task('images', function() {
-    gulp.src('./src/images/*.{png,svg}')
-        .pipe(gulp.dest('./www/img'));
+    return gulp.src('./src/images/*.{png,svg}')
+        .pipe(gulp.dest('./public_html/img'));
 });
 
+// COPIES .JS FROM SRC TO DEST
 gulp.task('javascript', function() {
-    gulp.src('./src/javascript/*.js')
-        .pipe(gulp.dest('./www/js'));
+    return gulp.src('./src/javascript/*.js')
+        .pipe(gulp.dest('./public_html/js'));
 });
 
-gulp.task('build', ['images', 'pug', 'sass', 'javascript']);
+gulp.task('sass-watch', ['sass'], browserSync.reload);
+gulp.task('pug-watch', ['pug'], browserSync.reload);
+gulp.task('static-watch', ['images', 'javascript'], browserSync.reload);
 
-gulp.task('serve', ['sass'], function() {
+// WATCH FOR CHANGES
+gulp.task('watch', ['sass'], function() {
     browserSync.init({
-        server: "./www"
+        server: "./public_html"
     });
-    gulp.watch("src/sass/*.sass", ['sass']);
-    gulp.watch("src/javascript/*.js", ['javascript']);
-    gulp.watch("src/template/**/*.{pug,js,md}", ['pug']);
-    gulp.watch("www/*.html").on('change', browserSync.reload);
+    gulp.watch("src/sass/*.sass", ['sass-watch']);
+    gulp.watch("src/javascript/*.js", ['static-watch']);
+    gulp.watch("src/template/**/*.{pug,md}", ['pug-watch']);
 });
 
-gulp.task('default', ['build', 'serve']);
-
+// DEPLOY PROJECT USING FTP
 gulp.task('deploy', function() {
-
     var conn = ftp.create({
         host: '',
         user: '',
-        password: '',
-        parallel: 10,
-        log: gutil.log
+        password: ''
     });
-
-    return gulp.src(['www/**'], {
+    return gulp.src(['public_html/**'], {
             buffer: false
         })
         .pipe(conn.dest('/public_html'));
 });
+
+gulp.task('build', ['pug', 'sass', 'images', 'javascript']);
+gulp.task('default', ['build', 'watch']);
