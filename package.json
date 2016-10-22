@@ -1,6 +1,6 @@
 {
   "name": "web-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Starting point for static web apps.",
   "main": "app.js",
   "scripts": {
@@ -12,11 +12,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.16.0",
     "gulp": "^3.9.1",
     "gulp-pug": "^3.0.4",
     "gulp-sass": "^2.3.2",
     "gulp-watch": "^4.3.9",
+    "browser-sync": "^2.16.0",
+    "gulp-autoprefixer": "^3.1.1",
     "jstransformer-markdown-it": "^1.0.0",
     "vinyl-ftp": "^0.5.0"
   }

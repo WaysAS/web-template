@@ -4,7 +4,8 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     ftp = require('vinyl-ftp'),
     watch = require('gulp-watch'),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync'),
+    autoprefixer = require('gulp-autoprefixer');
 
 // COMPILES .PUG FILES TO HTML
 gulp.task('pug', function() {
@@ -17,6 +18,7 @@ gulp.task('pug', function() {
 gulp.task('sass', function() {
     return gulp.src('./src/sass/*.sass')
         .pipe(sass())
+        .pipe(autoprefixer())
         .pipe(gulp.dest('./public_html/css'));
 });
 
