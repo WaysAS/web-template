@@ -8,4 +8,5 @@ Minimalist starting point for web project using pug (formerly Jade), sass (with 
 
 ## How to Run
 - `npm install` to install all dependencies.
+- Then `bower install`.
 - `gulp` to compile template files and start `watch` and serve the files.
